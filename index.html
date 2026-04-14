@@ -3,312 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guess the Parent - Baby Animal Game</title>
+    <title>Who is My Parent?</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: #f0f8ff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
         }
-        h1 {
+        #info-area {
+            text-align: center;
+            max-width: 800px;
+            height: 100px;
             margin-bottom: 10px;
+        }
+        #explanation {
+            font-size: 1.2rem;
             color: #2c3e50;
+            font-weight: bold;
         }
         #game-container {
-            max-width: 900px;
-            width: 100%;
-        }
-        #image-container {
+            position: relative;
             width: 800px;
             height: 800px;
-            position: relative;
-            border: 4px solid #333;
-            margin: 20px auto;
+            border: 5px solid #fff;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             overflow: hidden;
-            background: #fff;
+            background-color: #ddd;
+            cursor: pointer;
         }
-        .parent {
+        /* The two parent options */
+        .option {
             position: absolute;
             top: 0;
             width: 400px;
             height: 800px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-        .parent:hover {
-            transform: scale(1.04);
-        }
-        #parent-left {
-            left: 0;
-        }
-        #parent-right {
-            right: 0;
-        }
-        .parent img {
-            width: 100%;
-            height: 100%;
             object-fit: cover;
+            transition: filter 0.3s;
         }
-        #baby-container {
+        #opt-left { left: 0; }
+        #opt-right { left: 400px; }
+        
+        /* The central baby image */
+        #baby-circle {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 300px;
+            width: 300px; /* 150px radius */
             height: 300px;
-            border: 8px solid white;
             border-radius: 50%;
-            overflow: hidden;
-            box-shadow: 0 0 25px rgba(0,0,0,0.7);
+            border: 6px solid #fff;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            object-fit: cover;
             z-index: 10;
-            pointer-events: none;
         }
-        #baby {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        #feedback {
+        /* Full reveal overlay */
+        #reveal-img {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 52px;
-            font-weight: bold;
-            text-shadow: 3px 3px 10px rgba(0,0,0,0.5);
-            z-index: 20;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-        #reveal-image {
-            width: 100%;
-            height: 100%;
+            top: 0;
+            left: 0;
+            width: 800px;
+            height: 800px;
             object-fit: cover;
+            z-index: 20;
             display: none;
-            z-index: 15;
         }
-        #info {
-            text-align: center;
-            font-size: 24px;
-            margin: 15px 0 10px;
-        }
-        #group-info {
-            font-size: 28px;
-            font-weight: bold;
-            color: #d32f2f;
-        }
-        #group-scores {
+        #score-board {
             display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin: 20px 0;
-            font-size: 21px;
+            gap: 20px;
+            margin-top: 20px;
         }
-        button {
-            padding: 12px 28px;
+        .group-card {
+            padding: 10px 20px;
+            background: white;
+            border-radius: 8px;
+            text-align: center;
+            border-bottom: 4px solid #ccc;
+        }
+        .active-group {
+            border-color: #3498db;
+            background: #e1f5fe;
+            transform: scale(1.1);
+        }
+        .btn-next {
+            margin-top: 15px;
+            padding: 10px 25px;
             font-size: 18px;
-            margin: 10px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+        #final-msg {
+            display: none;
+            font-size: 48px;
+            color: #2c3e50;
+            text-align: center;
+            margin-top: 100px;
         }
     </style>
 </head>
 <body>
-    <h1>Guess the Parent 🐾 Baby Animal Edition</h1>
+
+    <h1>Who is my Parent?</h1>
     
+    <div id="info-area">
+        <h2 id="turn-display">Group 1's Turn</h2>
+        <p id="explanation">Look at the baby in the center. Who is the parent? Click the Left or Right image!</p>
+    </div>
+
     <div id="game-container">
-        <div id="image-container">
-            <!-- Left Parent -->
-            <div id="parent-left" class="parent">
-                <img id="left-img" src="" alt="Parent Left">
-            </div>
-            <!-- Right Parent -->
-            <div id="parent-right" class="parent">
-                <img id="right-img" src="" alt="Parent Right">
-            </div>
-            
-            <!-- Baby in circle -->
-            <div id="baby-container">
-                <img id="baby" src="" alt="Baby Animal">
-            </div>
-            
-            <!-- Feedback -->
-            <div id="feedback"></div>
-            
-            <!-- Full Reveal -->
-            <img id="reveal-image" src="" alt="Reveal Image">
-        </div>
+        <img id="opt-left" class="option" src="" onclick="makeChoice('left')">
+        <img id="opt-right" class="option" src="" onclick="makeChoice('right')">
+        <img id="baby-circle" src="">
+        <img id="reveal-img" src="">
+    </div>
 
-        <div id="info">
-            <div id="group-info">Round <span id="round-num">1</span> — <span id="assigned-group">Group 1</span></div>
-            <div>Which adult animal is the parent of this baby?</div>
-        </div>
+    <button id="next-btn" class="btn-next" onclick="nextRound()">Next Round</button>
 
-        <div id="group-scores">
-            <div>Group 1: <span id="group1-score">0</span></div>
-            <div>Group 2: <span id="group2-score">0</span></div>
-            <div>Group 3: <span id="group3-score">0</span></div>
-            <div>Group 4: <span id="group4-score">0</span></div>
-        </div>
+    <div id="score-board">
+        <div id="g1-card" class="group-card active-group">Group 1<br><b id="s1">0</b></div>
+        <div id="g2-card" class="group-card">Group 2<br><b id="s2">0</b></div>
+        <div id="g3-card" class="group-card">Group 3<br><b id="s3">0</b></div>
+        <div id="g4-card" class="group-card">Group 4<br><b id="s4">0</b></div>
+    </div>
 
-        <button id="wrong-btn">Wrong Answer — Next Round</button>
+    <div id="final-msg">
+        GAME FINISHED!<br>Thanks for playing.
     </div>
 
     <script>
-        // ====================== YOUR ROUNDS ======================
-        // For each round, prepare 4 images:
-        // correct-parent.jpg, wrong-parent.jpg, baby.jpg, reveal.jpg
-        const questions = [
-            {
-                correct: "round1-correct.jpg",
-                wrong:   "round1-wrong.jpg",
-                baby:    "round1-baby.jpg",
-                reveal:  "round1-reveal.jpg"
-            },
-            {
-                correct: "round2-correct.jpg",
-                wrong:   "round2-wrong.jpg",
-                baby:    "round2-baby.jpg",
-                reveal:  "round2-reveal.jpg"
-            }
-            // Add rounds 3 to 12 below (just copy the pattern)
+        // CONFIGURATION: Add your images and facts here
+        const rounds = [
+            { baby: 'baby1.jpg', parent: 'parent1.jpg', wrong: 'wrong1.jpg', reveal: 'reveal1.jpg', fact: 'Correct! The Tadpole eventually loses its tail to become a Frog.' },
+            { baby: 'baby2.jpg', parent: 'parent2.jpg', wrong: 'wrong2.jpg', reveal: 'reveal2.jpg', fact: 'Spot on! This Cygnet will grow white feathers and become a Mute Swan.' },
+            { baby: 'baby3.jpg', parent: 'parent3.jpg', wrong: 'wrong3.jpg', reveal: 'reveal3.jpg', fact: 'Great job! Larvae like this turn into Ladybugs.' },
+            { baby: 'baby4.jpg', parent: 'parent4.jpg', wrong: 'wrong4.jpg', reveal: 'reveal4.jpg', fact: 'Yes! A baby platypus is called a puggle.' },
+            // ... Add up to 12 or more
         ];
 
-        // Auto-fill remaining rounds up to 12 (change filenames as needed)
-        for (let i = questions.length + 1; i <= 12; i++) {
-            questions.push({
-                correct: `round${i}-correct.jpg`,
-                wrong:   `round${i}-wrong.jpg`,
-                baby:    `round${i}-baby.jpg`,
-                reveal:  `round${i}-reveal.jpg`
-            });
-        }
+        let currentRoundIdx = 0;
+        let scores = [0, 0, 0, 0];
+        let currentGroup = 0; // 0=G1, 1=G2...
+        let correctSide = ''; 
 
-        let currentRound = 0;
-        let groupScores = [0, 0, 0, 0]; // Group 1-4
-
-        // DOM elements
-        const leftContainer = document.getElementById('parent-left');
-        const rightContainer = document.getElementById('parent-right');
-        const leftImg = document.getElementById('left-img');
-        const rightImg = document.getElementById('right-img');
-        const babyImg = document.getElementById('baby');
-        const revealImg = document.getElementById('reveal-image');
-        const feedback = document.getElementById('feedback');
-        const roundNumEl = document.getElementById('round-num');
-        const assignedGroupEl = document.getElementById('assigned-group');
-        const wrongBtn = document.getElementById('wrong-btn');
-
-        function updateGroupScores() {
-            for (let i = 1; i <= 4; i++) {
-                document.getElementById(`group${i}-score`).textContent = groupScores[i-1];
-            }
-        }
-
-        function getAssignedGroup(roundIndex) {
-            return ((roundIndex % 4) || 4); // 1 → Group 1, 2 → Group 2, ..., 5 → Group 1
-        }
-
-        function loadRound() {
-            if (currentRound >= questions.length) {
-                const maxScore = Math.max(...groupScores);
-                const winners = groupScores
-                    .map((score, i) => ({group: i+1, score}))
-                    .filter(item => item.score === maxScore)
-                    .map(item => item.group);
-
-                document.getElementById('info').innerHTML = `
-                    <h2>Game Finished!</h2>
-                    <p>${winners.length > 1 ? 'Winners' : 'Winner'}: Group${winners.length > 1 ? 's' : ''} 
-                    ${winners.join(' & ')} with ${maxScore} points 🎉</p>
-                `;
-                leftContainer.style.pointerEvents = rightContainer.style.pointerEvents = 'none';
-                wrongBtn.disabled = true;
+        function setupRound() {
+            if (currentRoundIdx >= rounds.length) {
+                document.getElementById('game-container').style.display = 'none';
+                document.getElementById('info-area').style.display = 'none';
+                document.getElementById('next-btn').style.display = 'none';
+                document.getElementById('final-msg').style.display = 'block';
                 return;
             }
 
-            const q = questions[currentRound];
-            const assigned = getAssignedGroup(currentRound + 1);
+            const data = rounds[currentRoundIdx];
+            const isParentLeft = Math.random() > 0.5;
+            correctSide = isParentLeft ? 'left' : 'right';
 
-            // Randomly decide which side gets the correct parent
-            const correctOnLeft = Math.random() < 0.5;
+            // Set images
+            document.getElementById('opt-left').src = isParentLeft ? data.parent : data.wrong;
+            document.getElementById('opt-right').src = isParentLeft ? data.wrong : data.parent;
+            document.getElementById('baby-circle').src = data.baby;
+            document.getElementById('reveal-img').src = data.reveal;
+            document.getElementById('reveal-img').style.display = 'none';
+            
+            // Reset UI
+            document.getElementById('explanation').textContent = "Look at the baby in the center. Who is the parent?";
+            document.getElementById('next-btn').style.display = 'none';
+            updateTurnUI();
+        }
 
-            // Reset visuals
-            revealImg.style.display = 'none';
-            feedback.style.opacity = '0';
-            leftContainer.style.pointerEvents = 'auto';
-            rightContainer.style.pointerEvents = 'auto';
+        function makeChoice(side) {
+            // Prevent clicking after choice is made
+            if (document.getElementById('reveal-img').style.display === 'block') return;
 
-            // Assign images
-            if (correctOnLeft) {
-                leftImg.src = q.correct;
-                rightImg.src = q.wrong;
+            const data = rounds[currentRoundIdx];
+            if (side === correctSide) {
+                scores[currentGroup] += 100;
+                document.getElementById('explanation').textContent = "CORRECT! " + data.fact;
+                document.getElementById(`s${currentGroup + 1}`).textContent = scores[currentGroup];
             } else {
-                leftImg.src = q.wrong;
-                rightImg.src = q.correct;
+                document.getElementById('explanation').textContent = "WRONG! " + data.fact;
             }
 
-            babyImg.src = q.baby;
-            revealImg.src = q.reveal;
-
-            // Update round info
-            roundNumEl.textContent = currentRound + 1;
-            assignedGroupEl.textContent = `Group ${assigned}`;
-
-            updateGroupScores();
+            // Show final reveal image
+            document.getElementById('reveal-img').style.display = 'block';
+            document.getElementById('next-btn').style.display = 'inline-block';
         }
 
-        function showFeedback(isCorrect) {
-            feedback.textContent = isCorrect ? "✅ Correct!" : "❌ Not this one!";
-            feedback.style.color = isCorrect ? "#2e7d32" : "#c62828";
-            feedback.style.opacity = '1';
+        function nextRound() {
+            currentRoundIdx++;
+            currentGroup = (currentGroup + 1) % 4;
+            setupRound();
         }
 
-        function handleClick(clickedLeft) {
-            const q = questions[currentRound];
-            const assignedIndex = getAssignedGroup(currentRound + 1) - 1; // 0-based
-
-            // Check if the clicked side has the correct parent
-            const correctOnLeft = leftImg.src.includes(q.correct); // simple check
-
-            const isCorrect = clickedLeft === correctOnLeft;
-
-            if (isCorrect) {
-                groupScores[assignedIndex] += 100;
-                showFeedback(true);
-            } else {
-                showFeedback(false);
+        function updateTurnUI() {
+            for (let i = 0; i < 4; i++) {
+                document.getElementById(`g${i+1}-card`).classList.remove('active-group');
             }
-
-            updateGroupScores();
-
-            // Show full reveal after a short delay
-            setTimeout(() => {
-                leftContainer.style.pointerEvents = 'none';
-                rightContainer.style.pointerEvents = 'none';
-                revealImg.style.display = 'block';
-
-                setTimeout(() => {
-                    currentRound++;
-                    loadRound();
-                }, 2800); // Show reveal for ~2.8 seconds
-            }, 900);
+            document.getElementById(`g${currentGroup+1}-card`).classList.add('active-group');
+            document.getElementById('turn-display').textContent = `Group ${currentGroup + 1}'s Turn`;
         }
 
-        // Event listeners
-        leftContainer.addEventListener('click', () => handleClick(true));
-        rightContainer.addEventListener('click', () => handleClick(false));
-
-        wrongBtn.addEventListener('click', () => {
-            currentRound++;
-            loadRound();
-        });
-
-        // Start the game
-        loadRound();
+        // Initialize first round
+        setupRound();
     </script>
 </body>
 </html>
