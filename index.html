@@ -16,15 +16,30 @@
         }
         #info-area {
             text-align: center;
-            max-width: 800px;
-            height: 100px;
-            margin-bottom: 10px;
+            width: 800px; /* Match the game container width */
+            height: 120px; /* Dedicated fixed space for text */
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Centers text vertically within the 120px */
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 10px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
         #explanation {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #2c3e50;
-            font-weight: bold;
+            line-height: 1.4; /* Better readability for multi-line text */
+            margin: 5px 0 0 0;
         }
+        #turn-display {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #3498db;
+        }
+        
         #game-container {
             position: relative;
             width: 800px;
@@ -148,8 +163,8 @@
             { baby: 'baby5.jpg', parent: 'parent5.jpg', wrong: 'wrong5.jpg', reveal: 'reveal5.jpg', fact: 'This is the picture of Nubian goat with her kid. Young sheep is called a lamb while a young goat is called a kid.' },
             { baby: 'baby6.jpg', parent: 'parent6.jpg', wrong: 'wrong6.jpg', reveal: 'reveal6.jpg', fact: 'Young swan is called a cygnet. In this picture you can see a Mute swan with her cygnet.' },
             { baby: 'baby7.jpg', parent: 'parent7.jpg', wrong: 'wrong7.jpg', reveal: 'reveal7.jpg', fact: 'Ladybugs are beneficial insects that feed on aphids and other small pests.' },
-            { baby: 'baby8.jpg', parent: 'parent8.jpg', wrong: 'wrong8.jpg', reveal: 'reveal8.jpg', fact: 'Yak is a large bovine animal that lives in the Himalayas. They are highly adapted to cold climates.' },
-            { baby: 'baby9.jpg', parent: 'parent9.jpg', wrong: 'wrong9.jpg', reveal: 'reveal9.jpg', fact: 'Kangaroo joey born very early in their development. That is why their mother carries them in a pouch.' },
+            { baby: 'baby8.jpg', parent: 'parent8.jpg', wrong: 'wrong8.jpg', reveal: 'reveal8.jpg', fact: 'Kangaroo joey born very early in their development. That is why their mother carries them in a pouch.' },
+            { baby: 'baby9.jpg', parent: 'parent9.jpg', wrong: 'wrong9.jpg', reveal: 'reveal9.jpg', fact: 'Yak is a large bovine animal that lives in the Himalayas. They are highly adapted to cold climates.' },
             { baby: 'baby10.jpg', parent: 'parent10.jpg', wrong: 'wrong10.jpg', reveal: 'reveal10.jpg', fact: 'There are several breed of hairless cat. The one in the picture is a Sphynx cat.' },
             { baby: 'baby11.jpg', parent: 'parent11.jpg', wrong: 'wrong11.jpg', reveal: 'reveal11.jpg', fact: 'Emperor penguin is the largest penguin species. Their baby is covered in down feathers to keep them warm.' },
             { baby: 'baby12.jpg', parent: 'parent12.jpg', wrong: 'wrong12.jpg', reveal: 'reveal12.jpg', fact: 'Capybara captivate the internet with their cool and careless attitude.' },
